@@ -23,7 +23,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/STU" prefix_auto="1" extension_auto="1" />
+				<Option output="STU" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -44,11 +44,10 @@
 			<Add option="-pedantic" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions -std=c++11" />
-			<Add directory="C:/Users/germinolegrand/Documents/dev/libs" />
 			<Add directory="." />
 		</Compiler>
 		<Linker>
-			<Add directory="C:/Users/germinolegrand/Documents/dev/libs/SFML/libGCC_4_7" />
+			<Add directory="SFML/libGCC_4_7" />
 		</Linker>
 		<Unit filename="Background.cpp" />
 		<Unit filename="Background.h" />
