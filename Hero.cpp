@@ -10,7 +10,7 @@ Hero::Hero(const std::string &filename)
     m_spritesSheet.loadFromImage(img);
 
     m_skin.setTexture(m_spritesSheet);
-    m_skin.setOrigin(17.5f, 57.f);
+    //m_skin.setOrigin(17.5f, 28.5f);
 }
 
 Hero::~Hero()
@@ -20,12 +20,15 @@ Hero::~Hero()
 
 void Hero::move(const sf::Vector2f& offset)
 {
-    m_position += offset;
-    m_skin.move(offset);
+    auto position = m_collider.onMove(*this, m_position + offset);
+    m_position = position;
+    m_skin.setPosition(position);
 }
+
 
 
 void draw(Renderer &ren, const Hero &hero)
 {
     draw(ren, hero.m_skin);
+    draw(ren, hero.m_collider, hero.m_position);
 }

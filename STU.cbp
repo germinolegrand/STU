@@ -51,6 +51,8 @@
 		</Linker>
 		<Unit filename="Background.cpp" />
 		<Unit filename="Background.h" />
+		<Unit filename="BulletManager.cpp" />
+		<Unit filename="BulletManager.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
 		<Unit filename="GameInputEventProcessor.cpp" />
@@ -59,8 +61,14 @@
 		<Unit filename="GameInterface.h" />
 		<Unit filename="Hero.cpp" />
 		<Unit filename="Hero.h" />
+		<Unit filename="HeroCollider.cpp" />
+		<Unit filename="HeroCollider.h" />
 		<Unit filename="HeroController.cpp" />
 		<Unit filename="HeroController.h" />
+		<Unit filename="Monster.cpp" />
+		<Unit filename="Monster.h" />
+		<Unit filename="MonsterManager.cpp" />
+		<Unit filename="MonsterManager.h" />
 		<Unit filename="Renderer.cpp" />
 		<Unit filename="Renderer.h" />
 		<Unit filename="main.cpp" />

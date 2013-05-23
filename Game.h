@@ -35,6 +35,8 @@ private:
     sf::Clock m_pauseClock;
     sf::Time m_totalPausedTime;
 
+friend class GameInputEventProcessor;
+
 friend void draw(Renderer &ren, const Game &sh);
 };
 

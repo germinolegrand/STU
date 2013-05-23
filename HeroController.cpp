@@ -40,5 +40,20 @@ void HeroController::controlHero(const sf::Time &clock, Hero &hero)
     }
 
     hero.move(movement);
+
     m_moveClock = clock;
+}
+
+void HeroController::slowDown(bool sld)
+{
+    if(sld)
+    {
+        m_horizontalSpeed *= m_slowSpeed;
+        m_verticalSpeed *= m_slowSpeed;
+    }
+    else
+    {
+        m_horizontalSpeed /= m_slowSpeed;
+        m_verticalSpeed /= m_slowSpeed;
+    }
 }

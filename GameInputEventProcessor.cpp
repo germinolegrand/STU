@@ -21,6 +21,22 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
             m_ga.pauseSwitch();
             return true;
         }
+        else if(ev.key.code == sf::Keyboard::Key::LShift)
+        {
+            m_ga.m_heroController.slowDown(true);
+        }
+    }
+    else if(ev.type == sf::Event::EventType::KeyReleased)
+    {
+        if(ev.key.code == sf::Keyboard::Key::P)
+        {
+            m_ga.pauseSwitch();
+            return true;
+        }
+        else if(ev.key.code == sf::Keyboard::Key::LShift)
+        {
+            m_ga.m_heroController.slowDown(false);
+        }
     }
 
     return false;
