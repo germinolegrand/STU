@@ -4,6 +4,8 @@
 #include "using.h"
 #include <memory>
 
+#include "TextureManager.h"
+
 struct Bullet
 {
     sf::Sprite sprite;
@@ -14,14 +16,14 @@ struct Bullet
 class BulletManager
 {
 public:
-    BulletManager();
+    BulletManager(TextureManager textures);
     virtual ~BulletManager();
 
     void createBullet(bool isAlly, const std::string &type, sf::Vector2f position, std::function<sf::Vector2f(const sf::Vector2f&)> animation);
     void clearBullets();
 
 private:
-    std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
+    TextureManager m_textures;
     std::vector<std::unique_ptr<Bullet>> m_annemyBullets,
                                          m_allyBullets;
 };

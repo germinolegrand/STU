@@ -3,10 +3,12 @@
 
 #include "using.h"
 
+#include "TextureManager.h"
+
 class Background
 {
 public:
-    Background();
+    Background(TextureManager textures);
     virtual ~Background();
 
     void scroll(const sf::Time &clock);
@@ -14,7 +16,8 @@ public:
     void setScrollSpeed(float pixelsPerSec);
 
 private:
-    sf::Texture m_repetitiveTexture;
+    TextureManager m_textures;
+
     sf::Sprite m_repeatSprite1,
                m_repeatSprite2;
 

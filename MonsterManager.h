@@ -7,18 +7,19 @@
 #include <memory>
 
 #include "Monster.h"
+#include "TextureManager.h"
 
 class MonsterManager
 {
 public:
-    MonsterManager();
+    MonsterManager(TextureManager textures);
     virtual ~MonsterManager();
 
     Monster& createMonster(const std::string &type);
     void deleteMonster(Monster &monster);
 
 private:
-    std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
+    TextureManager m_textures;
     std::vector<std::unique_ptr<Monster>> m_monsters;
 };
 

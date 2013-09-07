@@ -1,13 +1,17 @@
 #include "Game.h"
 
+#include "TextureManager.h"
 #include "Renderer.h"
 
 #include <iostream>
 #include <cstdlib>
 
-Game::Game()
+Game::Game(TextureManager& textures):
+    m_firstHeroEver(textures.subTextures("/heroes/")),
+    m_monsterManager(textures.subTextures("/monsters/")),
+    m_bg(textures.subTextures("/backgrounds/"))
 {
-    m_bgmusic.openFromFile("arabianNight.ogg");
+    //m_bgmusic.openFromFile("arabianNight.ogg");//God this is slow !
     //m_bgmusic.play();
 
     m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});

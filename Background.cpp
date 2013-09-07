@@ -1,11 +1,11 @@
 #include "Background.h"
 
-Background::Background()
+Background::Background(TextureManager textures):
+    m_textures(textures)
 {
-    m_repetitiveTexture.loadFromFile("rpbg.png");
-    m_repeatSprite1.setTexture(m_repetitiveTexture);
-    m_repeatSprite2.setTexture(m_repetitiveTexture);
-    m_repeatSprite2.setPosition(0, -static_cast<float>(m_repetitiveTexture.getSize().y));
+    m_repeatSprite1.setTexture(m_textures["rpbg"]);
+    m_repeatSprite2.setTexture(m_textures["rpbg"]);
+    m_repeatSprite2.setPosition(0, -static_cast<float>(m_textures["rpbg"].getSize().y));
 }
 
 Background::~Background()
@@ -20,11 +20,11 @@ void Background::scroll(const sf::Time& clock)
     m_repeatSprite1.move(0, m_scrollSpeed*timeElapsed.asSeconds());
     m_repeatSprite2.move(0, m_scrollSpeed*timeElapsed.asSeconds());
 
-    if(m_repeatSprite1.getPosition().y >= m_repetitiveTexture.getSize().y)
-        m_repeatSprite1.move(0, -2.f*static_cast<float>(m_repetitiveTexture.getSize().y));
+    if(m_repeatSprite1.getPosition().y >= m_textures["rpbg"].getSize().y)
+        m_repeatSprite1.move(0, -2.f*static_cast<float>(m_textures["rpbg"].getSize().y));
 
-    if(m_repeatSprite2.getPosition().y >= m_repetitiveTexture.getSize().y)
-        m_repeatSprite2.move(0, -2.f*static_cast<float>(m_repetitiveTexture.getSize().y));
+    if(m_repeatSprite2.getPosition().y >= m_textures["rpbg"].getSize().y)
+        m_repeatSprite2.move(0, -2.f*static_cast<float>(m_textures["rpbg"].getSize().y));
 
     m_scrollClock = clock;
 }

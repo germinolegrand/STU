@@ -7,12 +7,16 @@
 #include "Hero.h"
 #include "HeroController.h"
 
+#include "MonsterManager.h"
+
 #include "Background.h"
+
+class TextureManager;
 
 class Game
 {
 public:
-    Game();
+    Game(TextureManager& textures);
     virtual ~Game();
 
     void pause(bool pauseOn);
@@ -20,10 +24,11 @@ public:
 
     void frame();
 
-protected:
 private:
-    Hero m_firstHeroEver {"heros_bidon.png"};
+    Hero m_firstHeroEver;
     HeroController m_heroController;
+
+    MonsterManager m_monsterManager;
 
     Background m_bg;
 

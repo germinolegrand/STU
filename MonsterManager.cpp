@@ -2,7 +2,8 @@
 
 #include <algorithm>
 
-MonsterManager::MonsterManager()
+MonsterManager::MonsterManager(TextureManager textures):
+    m_textures(textures)
 {
     //ctor
 }
@@ -14,7 +15,7 @@ MonsterManager::~MonsterManager()
 
 Monster& MonsterManager::createMonster(const std::string& type)
 {
-    std::unique_ptr<Monster> mst(new Monster(*m_textures[type]));
+    std::unique_ptr<Monster> mst(new Monster(m_textures[type]));
 
     m_monsters.push_back(std::move(mst));
 

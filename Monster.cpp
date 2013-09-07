@@ -1,6 +1,7 @@
 #include "Monster.h"
 
-Monster::Monster(sf::Texture &texture):m_sprite(texture)
+Monster::Monster(sf::Texture &texture):
+    m_sprite(texture)
 {
     //ctor
 }

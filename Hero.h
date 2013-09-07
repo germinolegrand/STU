@@ -3,19 +3,21 @@
 
 #include "using.h"
 
+#include "TextureManager.h"
 #include "HeroCollider.h"
 
 class Hero
 {
 public:
-    Hero(const std::string &filename);
+    Hero(TextureManager textures);
     virtual ~Hero();
 
     void move(const sf::Vector2f &offset);
 
     void setPosition(const sf::Vector2f &uncheckedPosition);
 private:
-    sf::Texture m_spritesSheet;
+    TextureManager m_textures;
+
     sf::Sprite m_skin;
 
     sf::Vector2f m_position;

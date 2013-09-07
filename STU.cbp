@@ -71,6 +71,8 @@
 		<Unit filename="MonsterManager.h" />
 		<Unit filename="Renderer.cpp" />
 		<Unit filename="Renderer.h" />
+		<Unit filename="TextureManager.cpp" />
+		<Unit filename="TextureManager.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="using.h" />
 		<Extensions>

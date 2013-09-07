@@ -2,7 +2,8 @@
 
 #include "Hero.h"
 
-HeroCollider::HeroCollider(const sf::FloatRect &box): m_box(box)
+HeroCollider::HeroCollider(const sf::FloatRect &box):
+    m_box(box)
 {
     //ctor
 }

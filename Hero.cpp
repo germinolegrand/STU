@@ -2,14 +2,10 @@
 
 #include <iostream>
 
-Hero::Hero(const std::string &filename)
+Hero::Hero(TextureManager textures):
+    m_textures(textures)
 {
-    sf::Image img;
-    img.loadFromFile(filename);
-    img.createMaskFromColor(sf::Color::Magenta, 0);
-    m_spritesSheet.loadFromImage(img);
-
-    m_skin.setTexture(m_spritesSheet);
+    m_skin.setTexture(m_textures["heros_bidon"]);
     //m_skin.setOrigin(17.5f, 28.5f);
 }
 

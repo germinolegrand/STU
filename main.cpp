@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "Renderer.h"
+#include "TextureManager.h"
 #include "Game.h"
 #include "GameInputEventProcessor.h"
 
@@ -12,8 +13,10 @@ int main()
 
     sf::RenderWindow win = {videoMode, "STU", sf::Style::Close, sf::ContextSettings(0,0,8)};
 
+    TextureManager textureManager("textures/");
+
     bool playing = true;
-    Game game;
+    Game game(textureManager);
 
     GameInputEventProcessor giep(game);
 
