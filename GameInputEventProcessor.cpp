@@ -18,7 +18,10 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
     {
         if(ev.key.code == sf::Keyboard::Key::P)
         {
-            m_ga.pauseSwitch();
+            if(m_pauseOnPush)
+                m_ga.pauseSwitch();
+
+            m_pauseOnPush = false;
             return true;
         }
         else if(ev.key.code == sf::Keyboard::Key::LShift)
@@ -30,7 +33,7 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
     {
         if(ev.key.code == sf::Keyboard::Key::P)
         {
-            m_ga.pauseSwitch();
+            m_pauseOnPush = true;
             return true;
         }
         else if(ev.key.code == sf::Keyboard::Key::LShift)

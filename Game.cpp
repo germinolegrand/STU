@@ -65,8 +65,9 @@ void Game::frame()
 void draw(Renderer &ren, const Game& ga)
 {
     draw(ren, ga.m_bg);
-    draw(ren, ga.m_firstHeroEver);
 
     for(const auto& monster : ga.m_monsters)
         draw(ren, monster);
+
+    draw(ren, ga.m_firstHeroEver);
 }

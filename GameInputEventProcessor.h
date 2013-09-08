@@ -12,9 +12,11 @@ public:
     virtual ~GameInputEventProcessor();
 
     bool processInput(sf::Event &ev);
-protected:
+
 private:
     Game &m_ga;
+
+    bool m_pauseOnPush = !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P);
 };
 
 #endif // GAMEINPUTEVENTPROCESSOR_H
