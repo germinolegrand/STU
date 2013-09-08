@@ -2,14 +2,15 @@
 #define MONSTER_H
 
 #include "using.h"
+#include "TextureManager.h"
 
 class Monster
 {
 public:
-    Monster(sf::Texture &texture);
-    virtual ~Monster();
+    Monster(TextureManager textures);
 
 private:
+    TextureManager m_textures;
     sf::Sprite m_sprite;
 
 friend void draw(Renderer &ren, const Monster &monster);

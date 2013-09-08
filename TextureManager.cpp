@@ -23,7 +23,7 @@ TextureManager::TextureManager(std::string path)
 
         if(!dir_entity)
         {
-            auto last_dir_pos = dir_arbo_path.find_last_of("/");
+            auto last_dir_pos = dir_arbo_path.substr(0, dir_arbo_path.size() - 1).find_last_of("/");
             dir_arbo_path.resize(last_dir_pos == std::string::npos ? 0 : last_dir_pos);
             dir_arbo.pop_back();
             current_dir = dir_arbo.back();
@@ -36,14 +36,14 @@ TextureManager::TextureManager(std::string path)
             continue;
         }
 
-        std::string dir_entity_path = path + dir_arbo_path + "/" + dir_entity->d_name;
+        std::string dir_entity_path = path + dir_arbo_path + dir_entity->d_name;
 
         if(DIR* maybe_dir = opendir(dir_entity_path.c_str()))
             //it's a directory
         {
             current_dir = maybe_dir;
             dir_arbo.push_back(current_dir);
-            dir_arbo_path += std::string("/") + dir_entity->d_name;
+            dir_arbo_path += dir_entity->d_name + std::string("/");
 
             continue;
         }
@@ -53,7 +53,7 @@ TextureManager::TextureManager(std::string path)
         if(texture->loadFromFile(dir_entity_path))
         {
             std::string texture_name(dir_entity->d_name);
-            m_textures[dir_arbo_path + "/" + texture_name.substr(0, texture_name.find_last_of("."))] = texture;
+            m_textures[dir_arbo_path + texture_name.substr(0, texture_name.find_last_of("."))] = texture;
         }
     }
 
@@ -74,10 +74,6 @@ TextureManager::TextureManager(decltype(m_textures)::iterator begin, decltype(m_
         std::cout << texture_pair.first << std::endl;
 }
 
-TextureManager::~TextureManager()
-{
-    //dtor
-}
 
 TextureManager TextureManager::subTextures(std::string path)
 {

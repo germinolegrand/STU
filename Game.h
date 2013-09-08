@@ -29,6 +29,7 @@ private:
     HeroController m_heroController;
 
     MonsterManager m_monsterManager;
+    std::vector<Monster> m_monsters;
 
     Background m_bg;
 

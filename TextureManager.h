@@ -10,7 +10,6 @@ class TextureManager
 {
 public:
     TextureManager(std::string path);
-    virtual ~TextureManager();
 
     TextureManager subTextures(std::string path);
 

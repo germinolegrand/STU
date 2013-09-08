@@ -1,14 +1,10 @@
 #include "Monster.h"
 
-Monster::Monster(sf::Texture &texture):
-    m_sprite(texture)
+Monster::Monster(TextureManager textures):
+    m_textures(textures),
+    m_sprite(textures["normal"])
 {
     //ctor
-}
-
-Monster::~Monster()
-{
-    //dtor
 }
 
 void draw(Renderer& ren, const Monster& monster)

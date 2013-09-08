@@ -13,14 +13,11 @@ class MonsterManager
 {
 public:
     MonsterManager(TextureManager textures);
-    virtual ~MonsterManager();
 
-    Monster& createMonster(const std::string &type);
-    void deleteMonster(Monster &monster);
+    Monster operator[](const std::string &type);
 
 private:
-    TextureManager m_textures;
-    std::vector<std::unique_ptr<Monster>> m_monsters;
+    std::map<std::string, Monster> m_monsters;
 };
 
 #endif // MONSTERMANAGER_H
