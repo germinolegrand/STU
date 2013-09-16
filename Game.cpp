@@ -2,11 +2,14 @@
 
 #include "TextureManager.h"
 #include "Renderer.h"
+#include "collision.h"
 
 #include <iostream>
 #include <cstdlib>
 
 Game::Game(TextureManager& textures):
+    m_ally_bullets(textures.subTextures("bullets/")),
+    m_ennemy_bullets(textures.subTextures("bullets/")),
     m_firstHeroEver(textures.subTextures("heroes/")),
     m_monsterManager(textures.subTextures("monsters/")),
     m_bg(textures.subTextures("backgrounds/"))
@@ -17,11 +20,9 @@ Game::Game(TextureManager& textures):
     m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
 
     m_monsters.push_back({m_monsterManager["planemonster"]});
-}
 
-Game::~Game()
-{
-    //dtor
+    for(int i = 0; i < 100; ++i)
+        m_ennemy_bullets.createBullet(getClock(), "ennemy/", {200, 200}, [i](sf::Time t, const sf::Vector2f& v){return v + sf::Vector2f{0.01f*(i+t.asSeconds()), 0.05f*t.asSeconds()};});
 }
 
 void Game::pause(bool pauseOn)
@@ -55,12 +56,37 @@ void Game::frame()
     if(m_paused)
         return;
 
-    auto clock = m_gameClock.getElapsedTime() - m_totalPausedTime;
+    auto clock = getClock();
 
     m_bg.scroll(clock);
 
+    m_ally_bullets.animateBullets(clock);
+    m_ennemy_bullets.animateBullets(clock);
+
     m_heroController.controlHero(clock, m_firstHeroEver);
+
+    std::vector<Bullet*> bullets_to_erase;
+
+    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_ennemy_bullets), end(m_ennemy_bullets), [](Bullet& a, Bullet& b)
+    {
+        std::cout << "collision between bullets" << std::endl;
+    });
+
+    collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&bullets_to_erase](Bullet& b, Hero& h)
+    {
+        bullets_to_erase.push_back(&b);
+        std::cout << "collision between bullet and hero" << std::endl;
+    });
+
+    for(auto bullet_ptr : bullets_to_erase)
+        m_ennemy_bullets.erase(*bullet_ptr);
 }
+
+sf::Time Game::getClock() const
+{
+    return m_gameClock.getElapsedTime() - m_totalPausedTime;
+}
+
 
 void draw(Renderer &ren, const Game& ga)
 {
@@ -70,4 +96,7 @@ void draw(Renderer &ren, const Game& ga)
         draw(ren, monster);
 
     draw(ren, ga.m_firstHeroEver);
+
+    draw(ren, ga.m_ennemy_bullets);
+    draw(ren, ga.m_ally_bullets);
 }

@@ -25,6 +25,14 @@ private:
     HeroCollider m_collider {{5.f,16.f, 14.f, 19.f}};
 
 friend void draw(Renderer &ren, const Hero &hero);
+friend sf::FloatRect getCollisionBox(Hero& h)
+    {
+        auto collide_box = getCollisionBox(h.m_collider);
+        collide_box.left += h.m_position.x;
+        collide_box.top += h.m_position.y;
+
+        return collide_box;
+    };
 };
 
 void draw(Renderer &ren, const Hero &hero);

@@ -21,22 +21,22 @@ void HeroController::controlHero(const sf::Time &clock, Hero &hero)
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     {
-        movement.x += m_horizontalSpeed*timelaps.asSeconds();
+        movement.x += m_speed*timelaps.asSeconds();
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
     {
-        movement.x -= m_horizontalSpeed*timelaps.asSeconds();
+        movement.x -= m_speed*timelaps.asSeconds();
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
     {
-        movement.y += m_verticalSpeed*timelaps.asSeconds();
+        movement.y += m_speed*timelaps.asSeconds();
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
     {
-        movement.y -= m_verticalSpeed*timelaps.asSeconds();
+        movement.y -= m_speed*timelaps.asSeconds();
     }
 
     hero.move(movement);
@@ -46,14 +46,5 @@ void HeroController::controlHero(const sf::Time &clock, Hero &hero)
 
 void HeroController::slowDown(bool sld)
 {
-    if(sld)
-    {
-        m_horizontalSpeed *= m_slowSpeed;
-        m_verticalSpeed *= m_slowSpeed;
-    }
-    else
-    {
-        m_horizontalSpeed /= m_slowSpeed;
-        m_verticalSpeed /= m_slowSpeed;
-    }
+    m_speed = sld ? m_slowSpeed : m_normalSpeed;
 }

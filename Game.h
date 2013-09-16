@@ -4,6 +4,8 @@
 #include "using.h"
 #include <SFML/Audio.hpp>
 
+#include "BulletManager.h"
+
 #include "Hero.h"
 #include "HeroController.h"
 
@@ -17,7 +19,6 @@ class Game
 {
 public:
     Game(TextureManager& textures);
-    virtual ~Game();
 
     void pause(bool pauseOn);
     bool pauseSwitch();
@@ -25,6 +26,11 @@ public:
     void frame();
 
 private:
+    sf::Time getClock() const;
+
+    BulletManager m_ally_bullets,
+                  m_ennemy_bullets;
+
     Hero m_firstHeroEver;
     HeroController m_heroController;
 

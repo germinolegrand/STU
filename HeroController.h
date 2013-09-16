@@ -16,9 +16,9 @@ public:
     void slowDown(bool sld);
 
 private:
-    float m_slowSpeed = 0.5f;
-    float m_horizontalSpeed = 400.f;
-    float m_verticalSpeed = 400.f;
+    float m_normalSpeed = 400.f;
+    float m_slowSpeed = 150.f;
+    float m_speed = m_normalSpeed;
 
     sf::Time m_moveClock;
 };

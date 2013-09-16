@@ -8,12 +8,7 @@ HeroCollider::HeroCollider(const sf::FloatRect &box):
     //ctor
 }
 
-HeroCollider::~HeroCollider()
-{
-    //dtor
-}
-
-const sf::Vector2f& HeroCollider::onMove(Hero& he, const sf::Vector2f& pos)
+sf::Vector2f HeroCollider::onMove(Hero& he, const sf::Vector2f& pos)
 {
     sf::Vector2f newPosition(pos);
 
@@ -27,7 +22,7 @@ const sf::Vector2f& HeroCollider::onMove(Hero& he, const sf::Vector2f& pos)
     else if(pos.y + m_box.top + m_box.height> videoMode.height)
         newPosition.y = videoMode.height - m_box.top - m_box.height;
 
-    return std::move(newPosition);
+    return newPosition;
 }
 
 void draw(Renderer& ren, const HeroCollider& coll, const sf::Vector2f& hero_position)

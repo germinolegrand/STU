@@ -23,7 +23,7 @@ TextureManager::TextureManager(std::string path)
 
         if(!dir_entity)
         {
-            auto last_dir_pos = dir_arbo_path.substr(0, dir_arbo_path.size() - 1).find_last_of("/");
+            auto last_dir_pos = dir_arbo_path.substr(0, dir_arbo_path.size() - 1).find_last_of("/") + 1;
             dir_arbo_path.resize(last_dir_pos == std::string::npos ? 0 : last_dir_pos);
             dir_arbo.pop_back();
             current_dir = dir_arbo.back();
