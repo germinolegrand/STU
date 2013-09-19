@@ -1,16 +1,21 @@
 #ifndef GAMEINTERFACE_H
 #define GAMEINTERFACE_H
 
+#include <SFML/Graphics.hpp>
+
 class Game;
 
 class GameInterface
 {
 public:
     GameInterface(Game &ga);
-    virtual ~GameInterface();
-protected:
+
 private:
     Game &m_ga;
+
+    sf::Font m_font;
+
+    sf::Text m_dialogBox;
 };
 
 #endif // GAMEINTERFACE_H

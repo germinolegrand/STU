@@ -27,6 +27,4 @@ private:
 friend void draw(Renderer &ren, const Background &bg);
 };
 
-void draw(Renderer &ren, const Background &bg);
-
 #endif // BACKGROUND_H

@@ -52,6 +52,4 @@ friend class GameInputEventProcessor;
 friend void draw(Renderer &ren, const Game &sh);
 };
 
-void draw(Renderer &ren, const Game &ga);
-
 #endif // GAME_H

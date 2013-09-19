@@ -42,8 +42,20 @@ void BulletManager::erase(Bullet& bullet)
 
 void BulletManager::animateBullets(sf::Time clock)
 {
+    std::vector<Bullet*> out_of_field;
+
     for(auto& bullet : m_bullets)
+    {
         bullet.second.animate(clock - bullet.first);
+
+        auto BBox = getCollisionBox(bullet.second);
+
+        if(BBox.left < -static_cast<int>(videoMode.width)/2 || BBox.top < -static_cast<int>(videoMode.height)/2 || BBox.left > videoMode.width*1.5f || BBox.top > videoMode.height*1.5f)
+            out_of_field.push_back(&bullet.second);
+    }
+
+    for(auto& bullet : out_of_field)
+        erase(*bullet);
 }
 
 

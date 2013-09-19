@@ -4,6 +4,7 @@
 #include "using.h"
 #include <memory>
 #include <map>
+#include <iostream>
 
 #include "TextureManager.h"
 
@@ -62,7 +63,5 @@ private:
     friend iterator begin(BulletManager& b){ return iterator{begin(b.m_bullets)}; }
     friend iterator end(BulletManager& b){ return iterator{end(b.m_bullets)}; }
 };
-
-void draw(Renderer &ren, const BulletManager &bullets);
 
 #endif // BULLETMANAGER_H

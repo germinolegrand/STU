@@ -11,3 +11,8 @@ void draw(Renderer& ren, const Monster& monster)
 {
     ren.draw(monster.m_sprite);
 }
+
+sf::FloatRect getCollisionBox(const Monster& monster)
+{
+    return monster.m_sprite.getGlobalBounds();
+}

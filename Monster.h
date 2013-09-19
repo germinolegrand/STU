@@ -14,8 +14,7 @@ private:
     sf::Sprite m_sprite;
 
 friend void draw(Renderer &ren, const Monster &monster);
+friend sf::FloatRect getCollisionBox(const Monster& monster);
 };
-
-void draw(Renderer &ren, const Monster &monster);
 
 #endif // MONSTER_H

@@ -16,9 +16,7 @@ private:
     sf::FloatRect m_box;
 
 friend void draw(Renderer &ren, const HeroCollider& coll, const sf::Vector2f& hero_position);
-friend sf::FloatRect getCollisionBox(HeroCollider& h){ return h.m_box; };
+friend sf::FloatRect getCollisionBox(const HeroCollider& h){ return h.m_box; };
 };
-
-void draw(Renderer &ren, const HeroCollider& coll, const sf::Vector2f& hero_position);
 
 #endif // HEROCOLLIDER_H

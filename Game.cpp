@@ -65,17 +65,27 @@ void Game::frame()
 
     m_heroController.controlHero(clock, m_firstHeroEver);
 
-    std::vector<Bullet*> bullets_to_erase;
+    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [](Bullet& b, Monster& m)
+    {
+        std::cout << "collision between bullets and monster" << std::endl;
+    });
 
-    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_ennemy_bullets), end(m_ennemy_bullets), [](Bullet& a, Bullet& b)
+    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_ennemy_bullets), end(m_ennemy_bullets), [](Bullet& b1, Bullet& b2)
     {
         std::cout << "collision between bullets" << std::endl;
     });
+
+    std::vector<Bullet*> bullets_to_erase;
 
     collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&bullets_to_erase](Bullet& b, Hero& h)
     {
         bullets_to_erase.push_back(&b);
         std::cout << "collision between bullet and hero" << std::endl;
+    });
+
+    collisions(begin(m_monsters), end(m_monsters), &m_firstHeroEver, &m_firstHeroEver + 1, [&bullets_to_erase](Monster& m, Hero& h)
+    {
+        std::cout << "collision between monster and hero" << std::endl;
     });
 
     for(auto bullet_ptr : bullets_to_erase)

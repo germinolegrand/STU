@@ -1,11 +1,8 @@
 #include "GameInterface.h"
 
-GameInterface::GameInterface(Game &ga): m_ga(ga)
+GameInterface::GameInterface(Game &ga):
+    m_ga(ga)
 {
     //ctor
 }
 
-GameInterface::~GameInterface()
-{
-    //dtor
-}
