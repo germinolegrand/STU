@@ -60,6 +60,18 @@ bool Game::pauseSwitch()
     return m_paused;
 }
 
+void Game::heroBulletSpawning(bool activate)
+{
+    m_heroBulletSpawning = activate;
+}
+
+void Game::slowDown(bool activate)
+{
+    m_heroController.slowDown(activate);
+}
+
+
+
 void Game::frame()
 {
     if(m_paused)
@@ -75,6 +87,11 @@ void Game::frame()
     m_ennemy_bullets.animateBullets(clock, m_animation_prev_clock);
 
     m_heroController.controlHero(clock, m_animation_prev_clock, m_firstHeroEver);
+
+    if(m_heroBulletSpawning && clock/m_heroBulletSpawningInterval.asMicroseconds() > m_animation_prev_clock/m_heroBulletSpawningInterval.asMicroseconds())
+    {
+        m_ally_bullets.spawnBullet(clock, "ally/", getBulletCreationPoint(m_firstHeroEver), animation::goStraight({0.f, -1000.f}));
+    }
 
     collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [](Bullet& b, Monster& m)
     {

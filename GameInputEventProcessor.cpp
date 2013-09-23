@@ -5,7 +5,7 @@
 
 GameInputEventProcessor::GameInputEventProcessor(Game &ga): m_ga(ga)
 {
-    //ctor
+    m_ga.heroBulletSpawning(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W));
 }
 
 bool GameInputEventProcessor::processInput(sf::Event& ev)
@@ -20,13 +20,13 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
             m_pauseOnPush = false;
             return true;
         }
-        else if(ev.key.code == sf::Keyboard::Key::LShift)
+        else if(ev.key.code == sf::Keyboard::Key::LControl)
         {
-            m_ga.m_heroController.slowDown(true);
+            m_ga.slowDown(true);
         }
         else if(ev.key.code == sf::Keyboard::Key::W)
         {
-            m_ga.m_ally_bullets.spawnBullet(m_ga.getClock(), "ally/", getBulletCreationPoint(m_ga.m_firstHeroEver), animation::goStraight({0.f, -1000.f}));
+            m_ga.heroBulletSpawning(true);
         }
     }
     else if(ev.type == sf::Event::EventType::KeyReleased)
@@ -36,9 +36,13 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
             m_pauseOnPush = true;
             return true;
         }
-        else if(ev.key.code == sf::Keyboard::Key::LShift)
+        else if(ev.key.code == sf::Keyboard::Key::LControl)
         {
-            m_ga.m_heroController.slowDown(false);
+            m_ga.slowDown(false);
+        }
+        else if(ev.key.code == sf::Keyboard::Key::W)
+        {
+            m_ga.heroBulletSpawning(false);
         }
     }
 

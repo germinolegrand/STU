@@ -25,6 +25,9 @@ public:
     void pause(bool pauseOn);
     bool pauseSwitch();
 
+    void heroBulletSpawning(bool activate);
+    void slowDown(bool activate);
+
     void frame();
 
 private:
@@ -35,6 +38,8 @@ private:
 
     Hero m_firstHeroEver;
     HeroController m_heroController;
+    bool m_heroBulletSpawning = false;
+    sf::Time m_heroBulletSpawningInterval = sf::milliseconds(50);
 
     MonsterManager m_monsters;
 
@@ -49,8 +54,6 @@ private:
     sf::Time m_totalPausedTime;
 
     sf::Time m_animation_prev_clock = getClock();
-
-friend class GameInputEventProcessor;
 
 friend void draw(Renderer &ren, const Game &sh);
 };
