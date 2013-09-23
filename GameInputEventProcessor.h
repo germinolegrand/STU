@@ -9,7 +9,6 @@ class GameInputEventProcessor
 {
 public:
     GameInputEventProcessor(Game& ga);
-    virtual ~GameInputEventProcessor();
 
     bool processInput(sf::Event &ev);
 

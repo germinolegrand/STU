@@ -13,6 +13,8 @@
 
 #include "Background.h"
 
+#include "Level.h"
+
 class TextureManager;
 
 class Game
@@ -34,8 +36,7 @@ private:
     Hero m_firstHeroEver;
     HeroController m_heroController;
 
-    MonsterManager m_monsterManager;
-    std::vector<Monster> m_monsters;
+    MonsterManager m_monsters;
 
     Background m_bg;
 
@@ -46,6 +47,8 @@ private:
     sf::Clock m_gameClock;
     sf::Clock m_pauseClock;
     sf::Time m_totalPausedTime;
+
+    sf::Time m_animation_prev_clock = getClock();
 
 friend class GameInputEventProcessor;
 

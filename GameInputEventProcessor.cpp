@@ -8,11 +8,6 @@ GameInputEventProcessor::GameInputEventProcessor(Game &ga): m_ga(ga)
     //ctor
 }
 
-GameInputEventProcessor::~GameInputEventProcessor()
-{
-    //dtor
-}
-
 bool GameInputEventProcessor::processInput(sf::Event& ev)
 {
     if(ev.type == sf::Event::EventType::KeyPressed)
@@ -31,7 +26,7 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
         }
         else if(ev.key.code == sf::Keyboard::Key::W)
         {
-            m_ga.m_ally_bullets.createBullet(m_ga.getClock(), "ally/", getBulletCreationPoint(m_ga.m_firstHeroEver), animation::goUp(1000.f));
+            m_ga.m_ally_bullets.spawnBullet(m_ga.getClock(), "ally/", getBulletCreationPoint(m_ga.m_firstHeroEver), animation::goStraight({0.f, -1000.f}));
         }
     }
     else if(ev.type == sf::Event::EventType::KeyReleased)

@@ -9,9 +9,8 @@ class Background
 {
 public:
     Background(TextureManager textures);
-    virtual ~Background();
 
-    void scroll(const sf::Time &clock);
+    void scroll(sf::Time clock, sf::Time prev_clock);
 
     void setScrollSpeed(float pixelsPerSec);
 
@@ -21,7 +20,6 @@ private:
     sf::Sprite m_repeatSprite1,
                m_repeatSprite2;
 
-    sf::Time m_scrollClock;
     float m_scrollSpeed = 100.f;
 
 friend void draw(Renderer &ren, const Background &bg);

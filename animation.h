@@ -2,21 +2,17 @@
 #define ANIMATION_H_INCLUDED
 
 #include <cmath>
-#include <iostream>
 
 namespace animation
 {
 
-using Animation = std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)>;
+using BulletAnimation = std::function<sf::Vector2f(sf::Time, sf::Time, const sf::Vector2f&)>;
 
-Animation goUp(float speed)
+inline BulletAnimation goStraight(sf::Vector2f speed)
 {
-    sf::Time previous = sf::Time::Zero;
-    return [speed, previous](sf::Time t, const sf::Vector2f& pos) mutable
+    return [speed](sf::Time t, sf::Time prev_t, const sf::Vector2f& pos)
     {
-        auto newpos = pos + sf::Vector2f{0, -speed*(t - previous).asSeconds()};
-        previous = t;
-        return newpos;
+        return pos + speed*(t - prev_t).asSeconds();
     };
 }
 

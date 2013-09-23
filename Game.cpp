@@ -3,15 +3,17 @@
 #include "TextureManager.h"
 #include "Renderer.h"
 #include "collision.h"
+#include "animation.h"
 
 #include <iostream>
 #include <cstdlib>
+#include <complex>
 
 Game::Game(TextureManager& textures):
     m_ally_bullets(textures.subTextures("bullets/")),
     m_ennemy_bullets(textures.subTextures("bullets/")),
     m_firstHeroEver(textures.subTextures("heroes/")),
-    m_monsterManager(textures.subTextures("monsters/")),
+    m_monsters(textures.subTextures("monsters/")),
     m_bg(textures.subTextures("backgrounds/"))
 {
     //m_bgmusic.openFromFile("arabianNight.ogg");//God this is slow !
@@ -19,10 +21,17 @@ Game::Game(TextureManager& textures):
 
     m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
 
-    m_monsters.push_back({m_monsterManager["planemonster"]});
+    m_monsters.spawnMonster(getClock(), "planemonster/", {200, 20}, [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+    {
+        auto prev_pos = std::polar(50.f, prev_t.asSeconds());
+        auto pos = std::polar(50.f, t.asSeconds());
+        mc.move({real(pos) - real(prev_pos), imag(pos) - imag(prev_pos)});
 
-    for(int i = 0; i < 100; ++i)
-        m_ennemy_bullets.createBullet(getClock(), "ennemy/", {200, 200}, [i](sf::Time t, const sf::Vector2f& v){return v + sf::Vector2f{0.01f*(i+t.asSeconds()), 0.05f*t.asSeconds()};});
+        if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
+        {
+            mc.spawnBullet("ennemy/", animation::goStraight({20.f, 200.f}));
+        }
+    });
 }
 
 void Game::pause(bool pauseOn)
@@ -58,12 +67,14 @@ void Game::frame()
 
     auto clock = getClock();
 
-    m_bg.scroll(clock);
+    m_bg.scroll(clock, m_animation_prev_clock);
 
-    m_ally_bullets.animateBullets(clock);
-    m_ennemy_bullets.animateBullets(clock);
+    m_monsters.animateMonsters(clock, m_animation_prev_clock, m_ennemy_bullets);
 
-    m_heroController.controlHero(clock, m_firstHeroEver);
+    m_ally_bullets.animateBullets(clock, m_animation_prev_clock);
+    m_ennemy_bullets.animateBullets(clock, m_animation_prev_clock);
+
+    m_heroController.controlHero(clock, m_animation_prev_clock, m_firstHeroEver);
 
     collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [](Bullet& b, Monster& m)
     {
@@ -90,6 +101,8 @@ void Game::frame()
 
     for(auto bullet_ptr : bullets_to_erase)
         m_ennemy_bullets.erase(*bullet_ptr);
+
+    m_animation_prev_clock = clock;
 }
 
 sf::Time Game::getClock() const
@@ -102,8 +115,7 @@ void draw(Renderer &ren, const Game& ga)
 {
     draw(ren, ga.m_bg);
 
-    for(const auto& monster : ga.m_monsters)
-        draw(ren, monster);
+    draw(ren,ga.m_monsters);
 
     draw(ren, ga.m_firstHeroEver);
 

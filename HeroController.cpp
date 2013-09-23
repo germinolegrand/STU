@@ -14,10 +14,10 @@ HeroController::~HeroController()
     //dtor
 }
 
-void HeroController::controlHero(const sf::Time &clock, Hero &hero)
+void HeroController::controlHero(sf::Time clock, sf::Time prev_clock, Hero &hero)
 {
     sf::Vector2f movement;
-    sf::Time timelaps(clock - m_moveClock);
+    sf::Time timelaps(clock - prev_clock);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     {
@@ -40,8 +40,6 @@ void HeroController::controlHero(const sf::Time &clock, Hero &hero)
     }
 
     hero.move(movement);
-
-    m_moveClock = clock;
 }
 
 void HeroController::slowDown(bool sld)

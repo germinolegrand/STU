@@ -65,8 +65,12 @@
 		<Unit filename="HeroCollider.h" />
 		<Unit filename="HeroController.cpp" />
 		<Unit filename="HeroController.h" />
+		<Unit filename="Level.cpp" />
+		<Unit filename="Level.h" />
 		<Unit filename="Monster.cpp" />
 		<Unit filename="Monster.h" />
+		<Unit filename="MonsterControler.cpp" />
+		<Unit filename="MonsterControler.h" />
 		<Unit filename="MonsterManager.cpp" />
 		<Unit filename="MonsterManager.h" />
 		<Unit filename="Renderer.cpp" />

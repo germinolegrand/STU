@@ -8,14 +8,9 @@ Background::Background(TextureManager textures):
     m_repeatSprite2.setPosition(0, -static_cast<float>(m_textures["rpbg"].getSize().y));
 }
 
-Background::~Background()
+void Background::scroll(sf::Time clock, sf::Time prev_clock)
 {
-    //dtor
-}
-
-void Background::scroll(const sf::Time& clock)
-{
-    auto timeElapsed = clock - m_scrollClock;
+    auto timeElapsed = clock - prev_clock;
 
     m_repeatSprite1.move(0, m_scrollSpeed*timeElapsed.asSeconds());
     m_repeatSprite2.move(0, m_scrollSpeed*timeElapsed.asSeconds());
@@ -25,8 +20,6 @@ void Background::scroll(const sf::Time& clock)
 
     if(m_repeatSprite2.getPosition().y >= m_textures["rpbg"].getSize().y)
         m_repeatSprite2.move(0, -2.f*static_cast<float>(m_textures["rpbg"].getSize().y));
-
-    m_scrollClock = clock;
 }
 
 void Background::setScrollSpeed(float pixelsPerSec)

@@ -1,6 +1,6 @@
 #include "BulletManager.h"
 
-Bullet::Bullet(TextureManager textures, sf::Vector2f position, std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)> animation):
+Bullet::Bullet(TextureManager textures, sf::Vector2f position, animation::BulletAnimation animation):
     m_textures(textures),
     m_sprite(m_textures["1"]),
     m_animation(animation)
@@ -8,9 +8,9 @@ Bullet::Bullet(TextureManager textures, sf::Vector2f position, std::function<sf:
     m_sprite.setPosition(position);
 }
 
-void Bullet::animate(sf::Time clock)
+void Bullet::animate(sf::Time clock, sf::Time prev_clock)
 {
-    m_sprite.setPosition(m_animation(clock, m_sprite.getPosition()));
+    m_sprite.setPosition(m_animation(clock, prev_clock, m_sprite.getPosition()));
 }
 
 void draw(Renderer& ren, const Bullet& bullet)
@@ -25,7 +25,7 @@ BulletManager::BulletManager(TextureManager textures):
     //ctor
 }
 
-void BulletManager::createBullet(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)> animation)
+void BulletManager::spawnBullet(sf::Time clock, const std::string& type, sf::Vector2f position, animation::BulletAnimation animation)
 {
     m_bullets.insert(decltype(m_bullets)::value_type{clock, Bullet{m_textures.subTextures(type), position, animation}});
 }
@@ -40,13 +40,13 @@ void BulletManager::erase(Bullet& bullet)
     m_bullets.erase(find_if(begin(m_bullets), end(m_bullets), [&bullet](decltype(m_bullets)::value_type& b){ return &bullet == &b.second; }));
 }
 
-void BulletManager::animateBullets(sf::Time clock)
+void BulletManager::animateBullets(sf::Time clock, sf::Time prev_clock)
 {
     std::vector<Bullet*> out_of_field;
 
     for(auto& bullet : m_bullets)
     {
-        bullet.second.animate(clock - bullet.first);
+        bullet.second.animate(clock - bullet.first, prev_clock - bullet.first);
 
         auto BBox = getCollisionBox(bullet.second);
 

@@ -7,20 +7,21 @@
 #include <iostream>
 
 #include "TextureManager.h"
+#include "animation.h"
 
 class Bullet
 {
 public:
-    Bullet(TextureManager textures, sf::Vector2f position, std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)> animation);
+    Bullet(TextureManager textures, sf::Vector2f position, animation::BulletAnimation animation);
 
-    void animate(sf::Time clock);
+    void animate(sf::Time clock, sf::Time prev_clock);
 
 private:
     TextureManager m_textures;
 
     sf::Sprite m_sprite;
 
-    std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)> m_animation;
+    animation::BulletAnimation m_animation;
 
     friend void draw(Renderer &ren, const Bullet &bullet);
     friend sf::FloatRect getCollisionBox(Bullet& b){ return b.m_sprite.getGlobalBounds(); }
@@ -38,12 +39,12 @@ private:
 public:
     BulletManager(TextureManager textures);
 
-    void createBullet(sf::Time clock, const std::string &type, sf::Vector2f position, std::function<sf::Vector2f(sf::Time, const sf::Vector2f&)> animation);
+    void spawnBullet(sf::Time clock, const std::string &type, sf::Vector2f position, std::function<sf::Vector2f(sf::Time, sf::Time, const sf::Vector2f&)> animation);
     void clearBullets();
 
     void erase(Bullet& bullet);
 
-    void animateBullets(sf::Time clock);
+    void animateBullets(sf::Time clock, sf::Time prev_clock);
 
     struct iterator
     {
