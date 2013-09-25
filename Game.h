@@ -28,10 +28,17 @@ public:
     void heroBulletSpawning(bool activate);
     void slowDown(bool activate);
 
+    enum class State {Running, PlayerLose, PlayerWin};
+    State getState();
+
     void frame();
 
 private:
-    sf::Time getClock() const;
+    std::multimap<sf::Time, std::function<void()>> m_triggers;
+
+    void executeTriggers();
+    void addSimpleTrigger(sf::Time timelaps, std::function<void()> f);
+    void addCyclicTrigger(sf::Time interval, std::function<void()> f);
 
     BulletManager m_ally_bullets,
                   m_ennemy_bullets;
@@ -52,6 +59,8 @@ private:
     sf::Clock m_gameClock;
     sf::Clock m_pauseClock;
     sf::Time m_totalPausedTime;
+
+    sf::Time getClock() const;
 
     sf::Time m_animation_prev_clock = getClock();
 

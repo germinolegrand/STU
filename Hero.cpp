@@ -27,6 +27,7 @@ void draw(Renderer &ren, const Hero &hero)
 {
     draw(ren, hero.m_skin);
     draw(ren, hero.m_collider, hero.m_position);
+    draw(ren, hero.m_life, sf::Vector2f(hero.m_skin.getGlobalBounds().left, hero.m_skin.getGlobalBounds().top + hero.m_skin.getLocalBounds().height));
 }
 
 sf::FloatRect getCollisionBox(const Hero& h)
@@ -42,4 +43,14 @@ sf::Vector2f getBulletCreationPoint(const Hero& h)
 {
     auto BBox = h.m_skin.getGlobalBounds();
     return {BBox.left + BBox.width/2, BBox.top};
+}
+
+void takeDamages(Hero& h, int damages)
+{
+    h.m_life -= damages;
+}
+
+bool isAlive(const Hero& h)
+{
+    return isAlive(h.m_life);
 }

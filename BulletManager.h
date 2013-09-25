@@ -25,6 +25,7 @@ private:
 
     friend void draw(Renderer &ren, const Bullet &bullet);
     friend sf::FloatRect getCollisionBox(Bullet& b){ return b.m_sprite.getGlobalBounds(); }
+    friend int getDamages(Bullet& b);
 };
 
 void draw(Renderer &ren, const Bullet &bullet);

@@ -37,6 +37,14 @@ int main()
 
         game.frame();
 
+        auto gameState = game.getState();
+
+        if(gameState != Game::State::Running)
+        {
+            std::cout << "You have " << (gameState == Game::State::PlayerWin ? "won" : "lost") << " !" << std::endl;
+            playing = false;
+        }
+
         win.clear();
 
         win.setView(gameMainView);

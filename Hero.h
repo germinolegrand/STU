@@ -5,6 +5,7 @@
 
 #include "TextureManager.h"
 #include "HeroCollider.h"
+#include "Life.h"
 
 class Hero
 {
@@ -24,9 +25,13 @@ private:
 
     HeroCollider m_collider {{5.f,16.f, 14.f, 19.f}};
 
+    Life m_life {10};
+
 friend void draw(Renderer &ren, const Hero &hero);
 friend sf::FloatRect getCollisionBox(const Hero& h);
 friend sf::Vector2f getBulletCreationPoint(const Hero& h);
+friend void takeDamages(Hero& h, int damages);
+friend bool isAlive(const Hero& h);
 };
 
 #endif // HERO_H

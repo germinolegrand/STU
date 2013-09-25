@@ -18,6 +18,11 @@ void draw(Renderer& ren, const Bullet& bullet)
     draw(ren, bullet.m_sprite);
 }
 
+int getDamages(Bullet& b)
+{
+    return 1;
+}
+
 
 BulletManager::BulletManager(TextureManager textures):
     m_textures(textures)

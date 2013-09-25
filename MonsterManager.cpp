@@ -9,9 +9,9 @@ MonsterManager::MonsterManager(TextureManager textures):
     //ctor
 }
 
-void MonsterManager::spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation)
+void MonsterManager::spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life)
 {
-    m_monsters.insert(decltype(m_monsters)::value_type(clock, Monster{m_textures.subTextures(type), position, animation}));
+    m_monsters.insert(decltype(m_monsters)::value_type(clock, Monster{m_textures.subTextures(type), position, animation, life}));
 }
 
 void MonsterManager::animateMonsters(sf::Time clock, sf::Time prev_clock, BulletManager& bulletManager)

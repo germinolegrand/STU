@@ -20,7 +20,7 @@ private:
 public:
     MonsterManager(TextureManager textures);
 
-    void spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation);
+    void spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life);
 
     void animateMonsters(sf::Time clock, sf::Time prev_clock, BulletManager& bulletManager);
 
@@ -35,6 +35,7 @@ public:
         friend iterator begin(MonsterManager& b);
         friend iterator end(MonsterManager& b);
         iterator(decltype(m_it) it): m_it(it){}
+        friend size_t distance(const iterator& a, const iterator& b){ return distance(a.m_it, b.m_it); }
     };
 
 private:

@@ -21,7 +21,7 @@ Game::Game(TextureManager& textures):
 
     m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
 
-    m_monsters.spawnMonster(getClock(), "planemonster/", {200, 20}, [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+    auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
     {
         auto prev_pos = std::polar(50.f, prev_t.asSeconds());
         auto pos = std::polar(50.f, t.asSeconds());
@@ -31,7 +31,11 @@ Game::Game(TextureManager& textures):
         {
             mc.spawnBullet("ennemy/", animation::goStraight({20.f, 200.f}));
         }
-    });
+    };
+
+    m_monsters.spawnMonster(getClock(), "planemonster/", {200, 20}, monsterAnimation, 3);
+
+    addCyclicTrigger(sf::milliseconds(4000), [&](){ m_monsters.spawnMonster(getClock(), "planemonster/", {static_cast<float>(rand()%600), static_cast<float>(rand()%400)}, monsterAnimation, 3); });
 }
 
 void Game::pause(bool pauseOn)
@@ -70,6 +74,12 @@ void Game::slowDown(bool activate)
     m_heroController.slowDown(activate);
 }
 
+Game::State Game::getState()
+{
+    return distance(begin(m_monsters), end(m_monsters)) == 0 ? State::PlayerWin
+                                                             : isAlive(m_firstHeroEver) ? State::Running
+                                                                                        : State::PlayerLose;
+}
 
 
 void Game::frame()
@@ -78,6 +88,8 @@ void Game::frame()
         return;
 
     auto clock = getClock();
+
+    executeTriggers();
 
     m_bg.scroll(clock, m_animation_prev_clock);
 
@@ -93,8 +105,14 @@ void Game::frame()
         m_ally_bullets.spawnBullet(clock, "ally/", getBulletCreationPoint(m_firstHeroEver), animation::goStraight({0.f, -1000.f}));
     }
 
-    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [](Bullet& b, Monster& m)
+
+    std::vector<Bullet*> ally_bullets_to_erase,
+                         ennemy_bullets_to_erase;
+
+    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [&ally_bullets_to_erase](Bullet& b, Monster& m)
     {
+        takeDamages(m, getDamages(b));
+        ally_bullets_to_erase.push_back(&b);
         std::cout << "collision between bullets and monster" << std::endl;
     });
 
@@ -103,23 +121,55 @@ void Game::frame()
         std::cout << "collision between bullets" << std::endl;
     });
 
-    std::vector<Bullet*> bullets_to_erase;
-
-    collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&bullets_to_erase](Bullet& b, Hero& h)
+    collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&ennemy_bullets_to_erase](Bullet& b, Hero& h)
     {
-        bullets_to_erase.push_back(&b);
+        takeDamages(h, getDamages(b));
+        ennemy_bullets_to_erase.push_back(&b);
         std::cout << "collision between bullet and hero" << std::endl;
     });
 
-    collisions(begin(m_monsters), end(m_monsters), &m_firstHeroEver, &m_firstHeroEver + 1, [&bullets_to_erase](Monster& m, Hero& h)
+    collisions(begin(m_monsters), end(m_monsters), &m_firstHeroEver, &m_firstHeroEver + 1, [](Monster& m, Hero& h)
     {
+        takeDamages(h, getDamages(m));
         std::cout << "collision between monster and hero" << std::endl;
     });
 
-    for(auto bullet_ptr : bullets_to_erase)
+
+    for(auto bullet_ptr : ally_bullets_to_erase)
+        m_ally_bullets.erase(*bullet_ptr);
+
+    for(auto bullet_ptr : ennemy_bullets_to_erase)
         m_ennemy_bullets.erase(*bullet_ptr);
 
     m_animation_prev_clock = clock;
+}
+
+
+void Game::addSimpleTrigger(sf::Time timelaps, std::function<void()> f)
+{
+    m_triggers.insert(decltype(m_triggers)::value_type(getClock() + timelaps, f));
+}
+
+void Game::addCyclicTrigger(sf::Time interval, std::function<void()> f)
+{
+    addSimpleTrigger(interval, [this, f, interval]()
+    {
+        f();
+        addCyclicTrigger(interval, f);
+    });
+}
+
+void Game::executeTriggers()
+{
+    auto clock = getClock();
+    m_triggers.erase(begin(m_triggers), find_if(begin(m_triggers), end(m_triggers), [clock](decltype(m_triggers)::value_type& trigger)
+    {
+        if(trigger.first > clock)
+            return true;
+
+        trigger.second();
+        return false;
+    }));
 }
 
 sf::Time Game::getClock() const
