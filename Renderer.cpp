@@ -1,11 +1,6 @@
 #include "Renderer.h"
 
-void draw(Renderer &ren, const sf::Shape &sh)
+void draw(Renderer &ren, const sf::Drawable &dr)
 {
-    ren.draw(sh);
-}
-
-void draw(Renderer &ren, const sf::Sprite& spr)
-{
-    ren.draw(spr);
+    ren.draw(dr);
 }

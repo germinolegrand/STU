@@ -28,6 +28,21 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
         {
             m_ga.heroBulletSpawning(true);
         }
+        else if(m_ga.m_state == Game::State::Menu || m_ga.m_state == Game::State::Paused)
+        {
+            if(ev.key.code == sf::Keyboard::Key::Down)
+            {
+                m_ga.m_current_menu->highlightNextEntry();
+            }
+            else if(ev.key.code == sf::Keyboard::Key::Up)
+            {
+                m_ga.m_current_menu->highlightPrevEntry();
+            }
+            else if(ev.key.code == sf::Keyboard::Key::Return)
+            {
+                m_ga.m_current_menu->selectEntry();
+            }
+        }
     }
     else if(ev.type == sf::Event::EventType::KeyReleased)
     {

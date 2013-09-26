@@ -4,6 +4,9 @@
 #include "using.h"
 #include <SFML/Audio.hpp>
 
+#include "Menu.h"
+#include "Level.h"
+
 #include "BulletManager.h"
 
 #include "Hero.h"
@@ -13,7 +16,6 @@
 
 #include "Background.h"
 
-#include "Level.h"
 
 class TextureManager;
 
@@ -22,23 +24,24 @@ class Game
 public:
     Game(TextureManager& textures);
 
-    void pause(bool pauseOn);
-    bool pauseSwitch();
+    void addLevel(std::function<void(Level&)> lvl);
+    void loadLevel(unsigned int level);
 
-    void heroBulletSpawning(bool activate);
-    void slowDown(bool activate);
-
-    enum class State {Running, PlayerLose, PlayerWin};
-    State getState();
+    enum class State {Quit, Menu, Running, Paused, PlayerLose, PlayerWin};
+    State getState() const;
 
     void frame();
 
 private:
-    std::multimap<sf::Time, std::function<void()>> m_triggers;
+    State m_state = State::Menu;
 
-    void executeTriggers();
-    void addSimpleTrigger(sf::Time timelaps, std::function<void()> f);
-    void addCyclicTrigger(sf::Time interval, std::function<void()> f);
+    Menu m_menu,
+         m_pause_menu;
+
+    Menu* m_current_menu = &m_menu;
+
+    std::vector<std::function<void(Level&)>> m_levels;
+    std::unique_ptr<Level> m_current_level;
 
     BulletManager m_ally_bullets,
                   m_ennemy_bullets;
@@ -54,7 +57,9 @@ private:
 
     sf::Music m_bgmusic;
 
-    bool m_paused = false;
+    sf::RenderTexture m_pause_rt;
+
+    bool m_paused = true;
 
     sf::Clock m_gameClock;
     sf::Clock m_pauseClock;
@@ -63,6 +68,15 @@ private:
     sf::Time getClock() const;
 
     sf::Time m_animation_prev_clock = getClock();
+
+    void pause(bool pauseOn);
+    bool pauseSwitch();
+
+    void heroBulletSpawning(bool activate);
+    void slowDown(bool activate);
+
+friend class Level;
+friend class GameInputEventProcessor;
 
 friend void draw(Renderer &ren, const Game &sh);
 };

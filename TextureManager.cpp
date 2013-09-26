@@ -84,7 +84,7 @@ TextureManager TextureManager::subTextures(std::string path)
                             }), path};
 }
 
-sf::Texture& TextureManager::operator[](std::string path)
+sf::Texture& TextureManager::operator[](std::string path) const
 {
     return *m_textures.at(path);
 }

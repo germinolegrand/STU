@@ -2,6 +2,7 @@
 #define ANIMATION_H_INCLUDED
 
 #include <cmath>
+#include <complex>
 
 namespace animation
 {
@@ -14,6 +15,14 @@ inline BulletAnimation goStraight(sf::Vector2f speed)
     {
         return pos + speed*(t - prev_t).asSeconds();
     };
+}
+
+
+inline sf::Vector2f moveAroundCircle(sf::Time t, sf::Time prev_t)
+{
+    auto prev_pos = std::polar(50.f, prev_t.asSeconds());
+    auto pos = std::polar(50.f, t.asSeconds());
+    return{real(pos) - real(prev_pos), imag(pos) - imag(prev_pos)};
 }
 
 }

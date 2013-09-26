@@ -8,7 +8,6 @@ const sf::VideoMode videoMode = {800, 600, sf::VideoMode::getDesktopMode().bitsP
 //template <class T>
 //void draw(Renderer &ren, const T&);
 
-void draw(Renderer &ren, const sf::Shape& sh);
-void draw(Renderer &ren, const sf::Sprite& spr);
+void draw(Renderer &ren, const sf::Drawable& dr);
 
 #endif // RENDERER_H

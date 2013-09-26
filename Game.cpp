@@ -10,33 +10,61 @@
 #include <complex>
 
 Game::Game(TextureManager& textures):
+    m_menu(textures.subTextures("menus/main/"),
+           {{"Jouer", [this](){
+               loadLevel(0);
+           }},{"Quitter", [this](){
+               m_state = State::Quit;
+           }}}),
+    m_pause_menu(textures.subTextures("menus/pause/"),
+           {{"Recommencer le niveau", [this](){
+               loadLevel(0);
+           }},{"Revenir au menu principal", [this](){
+               m_bgmusic.openFromFile("musics/menu.wav");
+               m_bgmusic.play();
+               m_current_menu = &m_menu;
+               m_state = State::Menu;
+           }},{"Quitter", [this](){
+               m_state = State::Quit;
+           }}}),
     m_ally_bullets(textures.subTextures("bullets/")),
     m_ennemy_bullets(textures.subTextures("bullets/")),
     m_firstHeroEver(textures.subTextures("heroes/")),
     m_monsters(textures.subTextures("monsters/")),
     m_bg(textures.subTextures("backgrounds/"))
 {
-    //m_bgmusic.openFromFile("arabianNight.ogg");//God this is slow !
-    //m_bgmusic.play();
+    m_pause_rt.create(videoMode.width, videoMode.height);
+
+    m_bgmusic.setLoop(true);
+
+    m_bgmusic.openFromFile("musics/menu.wav");
+    m_bgmusic.play();
 
     m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
-
-    auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
-    {
-        auto prev_pos = std::polar(50.f, prev_t.asSeconds());
-        auto pos = std::polar(50.f, t.asSeconds());
-        mc.move({real(pos) - real(prev_pos), imag(pos) - imag(prev_pos)});
-
-        if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
-        {
-            mc.spawnBullet("ennemy/", animation::goStraight({20.f, 200.f}));
-        }
-    };
-
-    m_monsters.spawnMonster(getClock(), "planemonster/", {200, 20}, monsterAnimation, 3);
-
-    addCyclicTrigger(sf::milliseconds(4000), [&](){ m_monsters.spawnMonster(getClock(), "planemonster/", {static_cast<float>(rand()%600), static_cast<float>(rand()%400)}, monsterAnimation, 3); });
 }
+
+void Game::addLevel(std::function<void(Level&)> lvl)
+{
+    m_levels.push_back(std::move(lvl));
+}
+
+void Game::loadLevel(unsigned int level)
+{
+    m_ally_bullets.clearBullets();
+    m_ennemy_bullets.clearBullets();
+    m_monsters.clearMonsters();
+
+    m_current_level.reset(new Level(*this));
+    m_levels[level](*m_current_level);
+
+    m_bgmusic.openFromFile("musics/theme.wav");
+    m_bgmusic.play();
+
+    m_current_menu = &m_pause_menu;
+
+    pause(false);
+}
+
 
 void Game::pause(bool pauseOn)
 {
@@ -53,10 +81,23 @@ bool Game::pauseSwitch()
     if(m_paused)
     {
         m_pauseClock.restart();
+
+        m_pause_rt.clear(sf::Color(0,0,0,0));
+        draw(m_pause_rt, *this);
+        m_pause_rt.display();
+
+        m_bgmusic.stop();
+
+        m_state = State::Paused;
     }
     else
     {
         m_totalPausedTime += m_pauseClock.getElapsedTime();
+
+        m_bgmusic.openFromFile("musics/theme.wav");
+        m_bgmusic.play();
+
+        m_state = State::Running;
     }
 
     std::cout << "pause=" << std::boolalpha << m_paused << std::endl;
@@ -74,22 +115,20 @@ void Game::slowDown(bool activate)
     m_heroController.slowDown(activate);
 }
 
-Game::State Game::getState()
+Game::State Game::getState() const
 {
-    return distance(begin(m_monsters), end(m_monsters)) == 0 ? State::PlayerWin
-                                                             : isAlive(m_firstHeroEver) ? State::Running
-                                                                                        : State::PlayerLose;
+    return m_state;
 }
 
 
 void Game::frame()
 {
-    if(m_paused)
+    if(m_state != State::Running)
         return;
 
     auto clock = getClock();
 
-    executeTriggers();
+    m_current_level->executeTriggers(clock);
 
     m_bg.scroll(clock, m_animation_prev_clock);
 
@@ -145,33 +184,6 @@ void Game::frame()
 }
 
 
-void Game::addSimpleTrigger(sf::Time timelaps, std::function<void()> f)
-{
-    m_triggers.insert(decltype(m_triggers)::value_type(getClock() + timelaps, f));
-}
-
-void Game::addCyclicTrigger(sf::Time interval, std::function<void()> f)
-{
-    addSimpleTrigger(interval, [this, f, interval]()
-    {
-        f();
-        addCyclicTrigger(interval, f);
-    });
-}
-
-void Game::executeTriggers()
-{
-    auto clock = getClock();
-    m_triggers.erase(begin(m_triggers), find_if(begin(m_triggers), end(m_triggers), [clock](decltype(m_triggers)::value_type& trigger)
-    {
-        if(trigger.first > clock)
-            return true;
-
-        trigger.second();
-        return false;
-    }));
-}
-
 sf::Time Game::getClock() const
 {
     return m_gameClock.getElapsedTime() - m_totalPausedTime;
@@ -180,9 +192,27 @@ sf::Time Game::getClock() const
 
 void draw(Renderer &ren, const Game& ga)
 {
+    if(ga.m_state == Game::State::Paused)
+    {
+        sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
+        rt_sprite.setColor(sf::Color(255,255,255,128));
+        draw(ren, rt_sprite);
+        draw(ren, ga.m_pause_menu);
+        return;
+    }
+
+    if(ga.m_state == Game::State::Menu)
+    {
+        sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
+        rt_sprite.setColor(sf::Color(255,255,255,128));
+        draw(ren, rt_sprite);
+        draw(ren, ga.m_menu);
+        return;
+    }
+
     draw(ren, ga.m_bg);
 
-    draw(ren,ga.m_monsters);
+    draw(ren, ga.m_monsters);
 
     draw(ren, ga.m_firstHeroEver);
 

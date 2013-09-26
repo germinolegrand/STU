@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <thread>
 #include "Renderer.h"
 #include "TextureManager.h"
 #include "Game.h"
@@ -13,10 +14,31 @@ int main()
 
     sf::RenderWindow win = {videoMode, "STU", sf::Style::Close, sf::ContextSettings(0,0,8)};
 
+    sf::Time prev_show_t;
+    sf::Clock showClock;
+
     TextureManager textureManager("textures/");
 
-    bool playing = true;
     Game game(textureManager);
+
+    game.addLevel([](Level& lvl)
+    {
+        auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+        {
+            mc.move(animation::moveAroundCircle(t, prev_t));
+
+            if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
+            {
+                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 200.f}));
+            }
+        };
+
+        lvl.spawnMonster("planemonster/", {200, 20}, monsterAnimation, 3);
+
+        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("planemonster/", {static_cast<float>(rand()%600), static_cast<float>(rand()%400)}, monsterAnimation, 3); });
+    });
+
+    //game.loadLevel(0);
 
     GameInputEventProcessor giep(game);
 
@@ -24,38 +46,40 @@ int main()
 
     sf::Event ev;
 
-    while(playing)
+    while(1)
     {
         while(win.pollEvent(ev))
         {
             if(ev.type == sf::Event::EventType::Closed)
             {
-                playing = false;
+                return 0;
             }
             else if(giep.processInput(ev));
         }
 
         game.frame();
 
-        auto gameState = game.getState();
-
-        if(gameState != Game::State::Running)
+        if(game.getState() == Game::State::Quit)
         {
-            std::cout << "You have " << (gameState == Game::State::PlayerWin ? "won" : "lost") << " !" << std::endl;
-            playing = false;
+            return 0;
         }
 
-        win.clear();
+        if(showClock.getElapsedTime()/sf::Int64(10000) > prev_show_t/sf::Int64(10000))
+        {
+            prev_show_t = showClock.getElapsedTime();
 
-        win.setView(gameMainView);
-        draw(win, game);
+            win.clear();
 
-        win.setView(win.getDefaultView());
+            win.setView(gameMainView);
+            draw(win, game);
 
-        win.display();
+            win.setView(win.getDefaultView());
+
+            win.display();
+        }
+        else
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-
-    return 0;
 }
 
 /**
