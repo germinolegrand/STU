@@ -23,7 +23,7 @@ void Level::executeTriggers(sf::Time clock)
 
 bool Level::isFinished()
 {
-    return (m_triggers.empty() && distance(begin(m_ga.m_monsters), end(m_ga.m_monsters)) == 0) || isAlive(m_ga.m_firstHeroEver);
+    return (m_triggers.empty() && distance(begin(m_ga.m_monsters), end(m_ga.m_monsters)) == 0) || !isAlive(m_ga.m_firstHeroEver);
 }
 
 
@@ -41,7 +41,25 @@ void Level::addCyclicTrigger(sf::Time interval, std::function<void()> f)
     });
 }
 
+void Level::clearTriggers()
+{
+    m_triggers.clear();
+}
+
+
 void Level::spawnMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life)
 {
     m_ga.m_monsters.spawnMonster(m_ga.getClock(), type, position, animation, life);
+}
+
+void Level::spawnBossMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life)
+{
+    spawnMonster(type, position, animation, life);
+    m_ga.m_bgmusic.openFromFile("musics/boss.wav");
+    m_ga.m_bgmusic.play();
+}
+
+void Level::clearMonsters()
+{
+    m_ga.m_monsters.clearMonsters();
 }

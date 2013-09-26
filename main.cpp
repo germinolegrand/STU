@@ -29,16 +29,16 @@ int main()
 
             if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
             {
-                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 200.f}));
+                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 50.f}));
             }
         };
 
         lvl.spawnMonster("planemonster/", {200, 20}, monsterAnimation, 3);
 
-        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("planemonster/", {static_cast<float>(rand()%600), static_cast<float>(rand()%400)}, monsterAnimation, 3); });
-    });
+        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("planemonster/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
 
-    //game.loadLevel(0);
+        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("planemonster/", {350.f, 50.f}, monsterAnimation, 200); });
+    });
 
     GameInputEventProcessor giep(game);
 

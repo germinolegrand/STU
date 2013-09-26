@@ -14,7 +14,7 @@ void Menu::highlightNextEntry()
 
 void Menu::highlightPrevEntry()
 {
-    m_hilightedEntry = m_hilightedEntry == 0 ? m_entries.size() : (m_hilightedEntry - 1);
+    m_hilightedEntry = m_hilightedEntry == 0 ? m_entries.size() - 1 : (m_hilightedEntry - 1);
 }
 
 void Menu::selectEntry()

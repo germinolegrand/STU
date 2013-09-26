@@ -125,6 +125,13 @@ Game::State Game::getState() const
 
 void Game::frame()
 {
+    if(m_state == State::Running && m_current_level->isFinished())
+    {
+        pause(true);
+        pause(false);
+        m_state = isAlive(m_firstHeroEver) ? State::PlayerWin : State::PlayerLose;
+    }
+
     if(m_state != State::Running)
         return;
 
@@ -147,13 +154,13 @@ void Game::frame()
     }
 
 
-    std::vector<Bullet*> ally_bullets_to_erase,
+    std::set<Bullet*> ally_bullets_to_erase,
                          ennemy_bullets_to_erase;
 
     collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_monsters), end(m_monsters), [&ally_bullets_to_erase](Bullet& b, Monster& m)
     {
         takeDamages(m, getDamages(b));
-        ally_bullets_to_erase.push_back(&b);
+        ally_bullets_to_erase.insert(&b);
         std::cout << "collision between bullets and monster" << std::endl;
     });
 
@@ -165,7 +172,7 @@ void Game::frame()
     collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&ennemy_bullets_to_erase](Bullet& b, Hero& h)
     {
         takeDamages(h, getDamages(b));
-        ennemy_bullets_to_erase.push_back(&b);
+        ennemy_bullets_to_erase.insert(&b);
         std::cout << "collision between bullet and hero" << std::endl;
     });
 
@@ -198,6 +205,24 @@ void draw(Renderer &ren, const Game& ga)
     {
         sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
         rt_sprite.setColor(sf::Color(255,255,255,128));
+        draw(ren, rt_sprite);
+        draw(ren, ga.m_pause_menu);
+        return;
+    }
+
+    if(ga.m_state == Game::State::PlayerWin)
+    {
+        sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
+        rt_sprite.setColor(sf::Color(128,255,128,128));
+        draw(ren, rt_sprite);
+        draw(ren, ga.m_pause_menu);
+        return;
+    }
+
+    if(ga.m_state == Game::State::PlayerLose)
+    {
+        sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
+        rt_sprite.setColor(sf::Color(255,16,16,128));
         draw(ren, rt_sprite);
         draw(ren, ga.m_pause_menu);
         return;

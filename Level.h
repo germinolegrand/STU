@@ -18,8 +18,11 @@ public:
 
     void addSimpleTrigger(sf::Time timelaps, std::function<void()> f);
     void addCyclicTrigger(sf::Time interval, std::function<void()> f);
+    void clearTriggers();
 
     void spawnMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life);
+    void spawnBossMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life);
+    void clearMonsters();
 
 private:
     Game& m_ga;
