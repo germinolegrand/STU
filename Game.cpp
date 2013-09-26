@@ -17,7 +17,9 @@ Game::Game(TextureManager& textures):
                m_state = State::Quit;
            }}}),
     m_pause_menu(textures.subTextures("menus/pause/"),
-           {{"Recommencer le niveau", [this](){
+           {{"Reprendre la partie", [this](){
+               pause(false);
+           }},{"Recommencer le niveau", [this](){
                loadLevel(0);
            }},{"Revenir au menu principal", [this](){
                m_bgmusic.openFromFile("musics/menu.wav");
