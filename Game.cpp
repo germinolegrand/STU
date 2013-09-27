@@ -29,6 +29,28 @@ Game::Game(TextureManager& textures):
            }},{"Quitter", [this](){
                m_state = State::Quit;
            }}}),
+    m_win_menu(textures.subTextures("menus/win/"),
+           {{"Niveau suivant", [this](){
+               loadLevel(m_current_level_id + 1);
+           }},{"Revenir au menu principal", [this](){
+               m_bgmusic.openFromFile("musics/menu.wav");
+               m_bgmusic.play();
+               m_current_menu = &m_menu;
+               m_state = State::Menu;
+           }},{"Quitter", [this](){
+               m_state = State::Quit;
+           }}}),
+    m_lose_menu(textures.subTextures("menus/lose/"),
+           {{"Recommencer le niveau", [this](){
+               loadLevel(0);
+           }},{"Revenir au menu principal", [this](){
+               m_bgmusic.openFromFile("musics/menu.wav");
+               m_bgmusic.play();
+               m_current_menu = &m_menu;
+               m_state = State::Menu;
+           }},{"Quitter", [this](){
+               m_state = State::Quit;
+           }}}),
     m_ally_bullets(textures.subTextures("bullets/")),
     m_ennemy_bullets(textures.subTextures("bullets/")),
     m_firstHeroEver(textures.subTextures("heroes/")),
@@ -52,12 +74,14 @@ void Game::addLevel(std::function<void(Level&)> lvl)
 
 void Game::loadLevel(unsigned int level)
 {
+    m_current_level_id = level;
+
     m_ally_bullets.clearBullets();
     m_ennemy_bullets.clearBullets();
     m_monsters.clearMonsters();
 
     m_current_level.reset(new Level(*this));
-    m_levels[level](*m_current_level);
+    m_levels[m_current_level_id](*m_current_level);
 
     m_bgmusic.openFromFile("musics/theme.wav");
     m_bgmusic.play();

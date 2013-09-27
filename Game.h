@@ -36,12 +36,15 @@ private:
     State m_state = State::Menu;
 
     Menu m_menu,
-         m_pause_menu;
+         m_pause_menu,
+         m_win_menu,
+         m_lose_menu;
 
     Menu* m_current_menu = &m_menu;
 
     std::vector<std::function<void(Level&)>> m_levels;
     std::unique_ptr<Level> m_current_level;
+    unsigned int m_current_level_id = 0;
 
     BulletManager m_ally_bullets,
                   m_ennemy_bullets;
