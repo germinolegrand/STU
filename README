@@ -1,3 +1,13 @@
 Projet labo GameDev SUPINFO Clermont-Ferrand 2012-2013
 
 STU est un Shoot'em up s'inspirant de Touhou.
+
+TODO:
+remplir les levels.
+remplir les levels.
+remplir les levels.
+mettre des vrais graphismes.
+permettre des actions lors de la mort d'un mob (notamment celle du boss, histoire au moins de pouvoir remettre la bonne musique, et pourquoi pas de faire terminer le niveau)
+
+help:
+pour terminer un lvl, il faut que les triggers du level soient vides. un lvl.clearTriggers() fait l'affaire.

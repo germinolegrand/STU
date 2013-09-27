@@ -10,9 +10,11 @@
 #include <complex>
 
 Game::Game(TextureManager& textures):
+    m_textures(textures),
     m_menu(textures.subTextures("menus/main/"),
            {{"Jouer", [this](){
                loadLevel(0);
+               m_state = State::Running;
            }},{"Quitter", [this](){
                m_state = State::Quit;
            }}}),
@@ -21,6 +23,7 @@ Game::Game(TextureManager& textures):
                pause(false);
            }},{"Recommencer le niveau", [this](){
                loadLevel(0);
+               m_state = State::Running;
            }},{"Revenir au menu principal", [this](){
                m_bgmusic.openFromFile("musics/menu.wav");
                m_bgmusic.play();
@@ -32,6 +35,7 @@ Game::Game(TextureManager& textures):
     m_win_menu(textures.subTextures("menus/win/"),
            {{"Niveau suivant", [this](){
                loadLevel(m_current_level_id + 1);
+               m_state = State::Running;
            }},{"Revenir au menu principal", [this](){
                m_bgmusic.openFromFile("musics/menu.wav");
                m_bgmusic.play();
@@ -43,6 +47,7 @@ Game::Game(TextureManager& textures):
     m_lose_menu(textures.subTextures("menus/lose/"),
            {{"Recommencer le niveau", [this](){
                loadLevel(0);
+               m_state = State::Running;
            }},{"Revenir au menu principal", [this](){
                m_bgmusic.openFromFile("musics/menu.wav");
                m_bgmusic.play();
@@ -63,8 +68,6 @@ Game::Game(TextureManager& textures):
 
     m_bgmusic.openFromFile("musics/menu.wav");
     m_bgmusic.play();
-
-    m_firstHeroEver.move({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
 }
 
 void Game::addLevel(std::function<void(Level&)> lvl)
@@ -79,6 +82,10 @@ void Game::loadLevel(unsigned int level)
     m_ally_bullets.clearBullets();
     m_ennemy_bullets.clearBullets();
     m_monsters.clearMonsters();
+
+    m_firstHeroEver.~Hero();
+    new (&m_firstHeroEver) Hero(m_textures.subTextures("heroes/"));
+    m_firstHeroEver.setPosition({static_cast<float>(videoMode.width)/2, static_cast<float>(videoMode.height)});
 
     m_current_level.reset(new Level(*this));
     m_levels[m_current_level_id](*m_current_level);
@@ -153,7 +160,19 @@ void Game::frame()
     {
         pause(true);
         pause(false);
-        m_state = isAlive(m_firstHeroEver) ? State::PlayerWin : State::PlayerLose;
+
+        if(isAlive(m_firstHeroEver))
+        {
+            m_current_menu = &m_win_menu;
+            m_bgmusic.openFromFile("musics/menu.wav");
+            m_state = State::PlayerWin;
+        }
+        else
+        {
+            m_current_menu = &m_lose_menu;
+            m_bgmusic.openFromFile("musics/menu.wav");
+            m_state = State::PlayerLose;
+        }
     }
 
     if(m_state != State::Running)
@@ -239,7 +258,7 @@ void draw(Renderer &ren, const Game& ga)
         sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
         rt_sprite.setColor(sf::Color(128,255,128,128));
         draw(ren, rt_sprite);
-        draw(ren, ga.m_pause_menu);
+        draw(ren, ga.m_win_menu);
         return;
     }
 
@@ -248,7 +267,7 @@ void draw(Renderer &ren, const Game& ga)
         sf::Sprite rt_sprite(ga.m_pause_rt.getTexture());
         rt_sprite.setColor(sf::Color(255,16,16,128));
         draw(ren, rt_sprite);
-        draw(ren, ga.m_pause_menu);
+        draw(ren, ga.m_lose_menu);
         return;
     }
 

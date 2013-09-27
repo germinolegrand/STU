@@ -11,7 +11,6 @@ class Hero
 {
 public:
     Hero(TextureManager textures);
-    virtual ~Hero();
 
     void move(const sf::Vector2f &offset);
 

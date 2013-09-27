@@ -28,7 +28,7 @@ bool GameInputEventProcessor::processInput(sf::Event& ev)
         {
             m_ga.heroBulletSpawning(true);
         }
-        else if(m_ga.m_state == Game::State::Menu || m_ga.m_state == Game::State::Paused)
+        else if(m_ga.m_state == Game::State::Menu || m_ga.m_state == Game::State::Paused || m_ga.m_state == Game::State::PlayerWin || m_ga.m_state == Game::State::PlayerLose)
         {
             if(ev.key.code == sf::Keyboard::Key::Down)
             {

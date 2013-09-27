@@ -35,6 +35,8 @@ public:
 private:
     State m_state = State::Menu;
 
+    TextureManager m_textures;
+
     Menu m_menu,
          m_pause_menu,
          m_win_menu,

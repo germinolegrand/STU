@@ -9,11 +9,6 @@ Hero::Hero(TextureManager textures):
     //m_skin.setOrigin(17.5f, 28.5f);
 }
 
-Hero::~Hero()
-{
-    //dtor
-}
-
 void Hero::move(const sf::Vector2f& offset)
 {
     auto position = m_collider.onMove(*this, m_position + offset);
@@ -21,6 +16,10 @@ void Hero::move(const sf::Vector2f& offset)
     m_skin.setPosition(position);
 }
 
+void Hero::setPosition(const sf::Vector2f& uncheckedPosition)
+{
+    m_position = uncheckedPosition;
+}
 
 
 void draw(Renderer &ren, const Hero &hero)
