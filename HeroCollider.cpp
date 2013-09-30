@@ -27,13 +27,13 @@ sf::Vector2f HeroCollider::onMove(Hero& he, const sf::Vector2f& pos)
 
 void draw(Renderer& ren, const HeroCollider& coll, const sf::Vector2f& hero_position)
 {
-    sf::RectangleShape rect({coll.m_box.width, coll.m_box.height});
-    rect.setPosition(hero_position + sf::Vector2f{coll.m_box.left, coll.m_box.top});
-
-    rect.setOutlineThickness(1.f);
-    rect.setOutlineColor(sf::Color::Red);
-    rect.setFillColor(sf::Color::Transparent);
-
-    draw(ren, rect);
+//    sf::RectangleShape rect({coll.m_box.width, coll.m_box.height});
+//    rect.setPosition(hero_position + sf::Vector2f{coll.m_box.left, coll.m_box.top});
+//
+//    rect.setOutlineThickness(1.f);
+//    rect.setOutlineColor(sf::Color::Red);
+//    rect.setFillColor(sf::Color::Transparent);
+//
+//    draw(ren, rect);
 }
 

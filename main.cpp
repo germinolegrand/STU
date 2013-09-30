@@ -23,6 +23,8 @@ int main()
 
 
 
+<<<<<<< HEAD
+=======
     game.addLevel([](Level& lvl)
     {
         auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
@@ -42,6 +44,7 @@ int main()
         lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
     });
 
+>>>>>>> debug final
     game.addLevel([](Level& lvl)
     {
         auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
@@ -55,6 +58,32 @@ int main()
         };
 
         lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
+
+<<<<<<< HEAD
+        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+
+        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+=======
+        lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+
+        lvl.addSimpleTrigger(sf::milliseconds(7000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+>>>>>>> debug final
+    });
+
+    game.addLevel([](Level& lvl)
+    {
+        auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+        {
+            mc.move(animation::moveAroundCircle(t, prev_t));
+
+            if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
+            {
+                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 50.f}));
+            }
+        };
+
+        lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
+<<<<<<< HEAD
 
         lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
 
@@ -74,6 +103,8 @@ int main()
         };
 
         lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
+=======
+>>>>>>> debug final
         lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
         lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
         lvl.addSimpleTrigger(sf::milliseconds(4000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
@@ -89,16 +120,12 @@ int main()
 
     while(1)
     {
+        game.frame();
+
         while(win.pollEvent(ev))
         {
-            if(ev.type == sf::Event::EventType::Closed)
-            {
-                return 0;
-            }
-            else if(giep.processInput(ev));
+            if(giep.processInput(ev));
         }
-
-        game.frame();
 
         if(game.getState() == Game::State::Quit)
         {
