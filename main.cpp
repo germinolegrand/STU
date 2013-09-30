@@ -21,6 +21,8 @@ int main()
 
     Game game(textureManager);
 
+
+
     game.addLevel([](Level& lvl)
     {
         auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
@@ -33,12 +35,51 @@ int main()
             }
         };
 
-        lvl.spawnMonster("planemonster/", {200, 20}, monsterAnimation, 3);
+        lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
 
-        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("planemonster/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+        lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
 
-        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("planemonster/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
     });
+
+    game.addLevel([](Level& lvl)
+    {
+        auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+        {
+            mc.move(animation::moveAroundCircle(t, prev_t));
+
+            if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
+            {
+                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 50.f}));
+            }
+        };
+
+        lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
+
+        lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+
+        lvl.addSimpleTrigger(sf::milliseconds(7000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+    });
+
+    game.addLevel([](Level& lvl)
+    {
+        auto monsterAnimation = [](sf::Time t, sf::Time prev_t, MonsterControler mc)
+        {
+            mc.move(animation::moveAroundCircle(t, prev_t));
+
+            if(t.asMilliseconds()/1000 > prev_t.asMilliseconds()/1000)
+            {
+                mc.spawnBullet("ennemy/", animation::goStraight({20.f, 50.f}));
+            }
+        };
+
+        lvl.spawnMonster("GROS-BALOURD/", {200, 20}, monsterAnimation, 3);
+        lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+        lvl.addCyclicTrigger(sf::milliseconds(3000), [&](){ lvl.spawnMonster("GROS-BALOURD/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
+        lvl.addSimpleTrigger(sf::milliseconds(4000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+        lvl.addSimpleTrigger(sf::milliseconds(7000), [&](){ lvl.spawnBossMonster("GIGA-BALOURD/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
+    });
+
 
     GameInputEventProcessor giep(game);
 
