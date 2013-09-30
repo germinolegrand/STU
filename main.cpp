@@ -37,7 +37,7 @@ int main()
 
         lvl.addCyclicTrigger(sf::milliseconds(4000), [&](){ lvl.spawnMonster("planemonster/", {static_cast<float>(rand()%800), static_cast<float>(rand()%200)}, monsterAnimation, rand()%100); });
 
-        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("planemonster/", {350.f, 50.f}, monsterAnimation, 200); });
+        lvl.addSimpleTrigger(sf::milliseconds(10000), [&](){ lvl.spawnBossMonster("planemonster/", {350.f, 50.f}, monsterAnimation, 200, [&](){ lvl.clearTriggers(); }); });
     });
 
     GameInputEventProcessor giep(game);

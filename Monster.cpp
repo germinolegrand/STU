@@ -1,12 +1,19 @@
 #include "Monster.h"
 
-Monster::Monster(TextureManager textures, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life):
+Monster::Monster(TextureManager textures, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life, std::function<void()> onDeath):
     m_textures(textures),
     m_sprite(textures["normal"]),
     m_animation(animation),
+    m_onDeath(onDeath),
     m_life(life)
 {
     m_sprite.setPosition(position);
+}
+
+Monster::~Monster()
+{
+    if(m_onDeath)
+        m_onDeath();
 }
 
 void Monster::move(const sf::Vector2f& offset)

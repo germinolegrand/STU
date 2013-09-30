@@ -34,8 +34,11 @@ Game::Game(TextureManager& textures):
            }}}),
     m_win_menu(textures.subTextures("menus/win/"),
            {{"Niveau suivant", [this](){
-               loadLevel(m_current_level_id + 1);
-               m_state = State::Running;
+               if(m_current_level_id + 1 < m_levels.size())
+               {
+                   loadLevel(m_current_level_id + 1);
+                   m_state = State::Running;
+               }
            }},{"Revenir au menu principal", [this](){
                m_bgmusic.openFromFile("musics/menu.wav");
                m_bgmusic.play();

@@ -9,7 +9,10 @@
 class Monster
 {
 public:
-    Monster(TextureManager textures, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life);
+    Monster(TextureManager textures, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life, std::function<void()> onDeath = nullptr);
+    ~Monster();
+
+    Monster(Monster&&) = default;
 
     void move(const sf::Vector2f& offset);
     void animate(sf::Time t, sf::Time prev_t, MonsterControler mc);
@@ -19,6 +22,7 @@ private:
     sf::Sprite m_sprite;
 
     std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> m_animation;
+    std::function<void()> m_onDeath;
 
     Life m_life;
 

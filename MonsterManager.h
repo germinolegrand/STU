@@ -22,7 +22,7 @@ public:
 
     void clearMonsters();
 
-    void spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life);
+    void spawnMonster(sf::Time clock, const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life, std::function<void()> onDeath = nullptr);
 
     void animateMonsters(sf::Time clock, sf::Time prev_clock, BulletManager& bulletManager);
 

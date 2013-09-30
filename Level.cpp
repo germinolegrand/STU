@@ -47,14 +47,22 @@ void Level::clearTriggers()
 }
 
 
-void Level::spawnMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life)
+void Level::spawnMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life, std::function<void()> onDeath)
 {
-    m_ga.m_monsters.spawnMonster(m_ga.getClock(), type, position, animation, life);
+    m_ga.m_monsters.spawnMonster(m_ga.getClock(), type, position, animation, life, onDeath);
 }
 
-void Level::spawnBossMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life)
+void Level::spawnBossMonster(const std::string& type, sf::Vector2f position, std::function<void(sf::Time t, sf::Time prev_t, MonsterControler mc)> animation, int life, std::function<void()> onDeath)
 {
-    spawnMonster(type, position, animation, life);
+    spawnMonster(type, position, animation, life, [this, onDeath]()
+    {
+        m_ga.m_bgmusic.openFromFile("musics/theme.wav");
+        m_ga.m_bgmusic.play();
+
+        if(onDeath)
+            onDeath();
+    });
+
     m_ga.m_bgmusic.openFromFile("musics/boss.wav");
     m_ga.m_bgmusic.play();
 }

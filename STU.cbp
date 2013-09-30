@@ -77,6 +77,7 @@
 		<Unit filename="MonsterControler.h" />
 		<Unit filename="MonsterManager.cpp" />
 		<Unit filename="MonsterManager.h" />
+		<Unit filename="README" />
 		<Unit filename="Renderer.cpp" />
 		<Unit filename="Renderer.h" />
 		<Unit filename="TextureManager.cpp" />
