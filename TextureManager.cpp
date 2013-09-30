@@ -59,9 +59,6 @@ TextureManager::TextureManager(std::string path)
 
     for(auto dir : dir_arbo)
         closedir(dir);
-
-    for(auto& texture_pair : m_textures)
-        std::cout << texture_pair.first << std::endl;
 }
 
 TextureManager::TextureManager(decltype(m_textures)::iterator begin, decltype(m_textures)::iterator end, std::string path)
@@ -69,9 +66,6 @@ TextureManager::TextureManager(decltype(m_textures)::iterator begin, decltype(m_
     for_each(begin, end, [&path, this](decltype(m_textures)::value_type& texture_pair){
         m_textures[texture_pair.first.substr(path.size())] = texture_pair.second;
     });
-
-    for(auto& texture_pair : m_textures)
-        std::cout << texture_pair.first << std::endl;
 }
 
 

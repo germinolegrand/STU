@@ -136,8 +136,6 @@ bool Game::pauseSwitch()
         m_state = State::Running;
     }
 
-    std::cout << "pause=" << std::boolalpha << m_paused << std::endl;
-
     return m_paused;
 }
 
@@ -207,25 +205,22 @@ void Game::frame()
     {
         takeDamages(m, getDamages(b));
         ally_bullets_to_erase.insert(&b);
-        std::cout << "collision between bullets and monster" << std::endl;
     });
 
-    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_ennemy_bullets), end(m_ennemy_bullets), [](Bullet& b1, Bullet& b2)
-    {
-        std::cout << "collision between bullets" << std::endl;
-    });
+//    collisions(begin(m_ally_bullets), end(m_ally_bullets), begin(m_ennemy_bullets), end(m_ennemy_bullets), [](Bullet& b1, Bullet& b2)
+//    {
+//        std::cout << "collision between bullets" << std::endl;
+//    });
 
     collisions(begin(m_ennemy_bullets), end(m_ennemy_bullets), &m_firstHeroEver, &m_firstHeroEver + 1, [&ennemy_bullets_to_erase](Bullet& b, Hero& h)
     {
         takeDamages(h, getDamages(b));
         ennemy_bullets_to_erase.insert(&b);
-        std::cout << "collision between bullet and hero" << std::endl;
     });
 
     collisions(begin(m_monsters), end(m_monsters), &m_firstHeroEver, &m_firstHeroEver + 1, [](Monster& m, Hero& h)
     {
         takeDamages(h, getDamages(m));
-        std::cout << "collision between monster and hero" << std::endl;
     });
 
 
